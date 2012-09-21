@@ -1,138 +1,59 @@
-# angular-seed — the seed for AngularJS apps
+# angular-seed-grunt — 'angular-seed' wrapped in grunt
 
-This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
-You can use it to quickly bootstrap your angular webapp projects and dev environment for these
-projects.
+* [AngularJS](http://angularjs.org/) is a fantastic (dare I say the best!) web app Javascript framework
+* [Grunt](http://gruntjs.com) is a fantastic (dare I say the best!) Javascript build tool
+* [angular-seed](https://github.com/angular/angular-seed) is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
 
-The seed contains AngularJS libraries, test libraries and a bunch of scripts all preconfigured for
-instant web development gratification. Just clone the repo (or download the zip/tarball), start up
-our (or yours) webserver and you are ready to develop and test your application.
+## Motivation
 
-The seed app doesn't do much, just shows how to wire two controllers and views together. You can
-check it out by opening app/index.html in your browser (might not work file `file://` scheme in
-certain browsers, see note below).
+angular-seed is a good starting place for an angularJS app but without being wrapped in a build,
+it becomes difficult to see how it will grow, how you will put it inside your CI servers, how you
+can add 'compile' steps such as minification, 'less' compilation, coffeescript compilation, etc.
 
-_Note: While angular is client-side-only technology and it's possible to create angular webapps that
-don't require a backend server at all, we recommend hosting the project files using a local
-webserver during development to avoid issues with security restrictions (sandbox) in browsers. The
-sandbox implementation varies between browsers, but quite often prevents things like cookies, xhr,
-etc to function properly when an html page is opened via `file://` scheme instead of `http://`._
+## Status
 
+This is still under heavy construction and is in a 'request for comments' state.  Please take part in discussions
+[here](https://groups.google.com/forum/?fromgroups#!forum/angular).
 
-## How to use angular-seed
+### Outstanding Items
 
-Clone the angular-seed repository and start hacking...
+* Tests are not part of the build.  First phase is to integrate the test scripts into grunt, future phases
+will be to use a possible testacular grunt plugin.
+* Lint the javascript.
+* Create a 'dist' target that demonstrates how grunt can minifiy, concat, uglify, etc. your code to make it
+production-ready.
 
+## Coffeescript support
 
-### Running the app during development
+angular-seed-grunt supports both javascript *and* coffeescript, dependening on which build you run.
+Grunt will compile your coffeescript on the fly and will push only javascript to your browser as
+you work.
 
-You can pick one of these options:
+You can delete any sections of the build that don't apply to you.  But try coffeescript.  It's fun ;)
 
-* serve this repository with your webserver
-* install node.js and run `scripts/web-server.js`
+## How to use angular-seed-grunt
 
-Then navigate your browser to `http://localhost:<port>/app/index.html` to see the app running in
-your browser.
+First ensure that you have a working copy of [grunt](http://gruntjs.com) and [npm](https://npmjs.org/)
+in your path.
 
+After cloning the repository, run the `scripts/init-repo` script to ensure that grunt has all of the
+dependencies that it needs for the build.
 
-### Running the app in production
+### Javascript build
 
-This really depends on how complex is your app and the overall infrastructure of your system, but
-the general rule is that all you need in production are all the files under the `app/` directory.
-Everything else should be omitted.
+By default the build will run in 'javascript' mode and will ignore the coffeescript files.  To run the default target, simply run `grunt`.  This will do the following:
 
-Angular apps are really just a bunch of static html, css and js files that just need to be hosted
-somewhere, where they can be accessed by browsers.
+* Clean the `target` directories, which is where all build artifacts go.
+* Copy all html, js, css, etc to the target.
+* Start a web server on port 8000.
+* Start a watch that will update the target whenever your source files change.
 
-If your Angular app is talking to the backend server via xhr or other means, you need to figure
-out what is the best way to host the static files to comply with the same origin policy if
-applicable. Usually this is done by hosting the files by the backend server or through
-reverse-proxying the backend server(s) and a webserver(s).
+### Coffeescript build
 
+If you're more of a coffeescript person, edit the `grunt.coffee` file and register the `build` task to point 
+to `build_coffee`.  Then run:
 
-### Running unit tests
+`grunt --config grunt.coffee` 
 
-We recommend using [jasmine](http://pivotal.github.com/jasmine/) and
-[Testacular](http://vojtajina.github.com/testacular/) for your unit tests/specs, but you are free
-to use whatever works for you.
-
-Requires [node.js](http://nodejs.org/), Testacular (`sudo npm install -g testacular`) and a local
-or remote browser.
-
-* start `scripts/test.sh` (on windows: `scripts\test.bat`)
-  * a browser will start and connect to the Testacular server (Chrome is default browser, others can be captured by loading the same url as the one in Chrome or by changing the `config/testacular.conf.js` file)
-* to run or re-run tests just change any of your source or test javascript files
-
-
-### End to end testing
-
-Angular ships with a baked-in end-to-end test runner that understands angular, your app and allows
-you to write your tests with jasmine-like BDD syntax.
-
-Requires a webserver, node.js + `./scripts/web-server.js` or your backend server that hosts the angular static files.
-
-Check out the
-[end-to-end runner's documentation](http://docs.angularjs.org/guide/dev_guide.e2e-testing) for more
-info.
-
-* create your end-to-end tests in `test/e2e/scenarios.js`
-* serve your project directory with your http/backend server or node.js + `scripts/web-server.js`
-* to run do one of:
-  * open `http://localhost:port/test/e2e/runner.html` in your browser
-  * run the tests from console with [Testacular](vojtajina.github.com/testacular) via
-    `scripts/e2e-test.sh` or `script/e2e-test.bat`
-
-
-### Receiving updates from upstream
-
-When we upgrade angular-seed's repo with newer angular or testing library code, you can just
-fetch the changes and merge them into your project with git.
-
-
-## Directory Layout
-
-    app/                --> all of the files to be used in production
-      css/              --> css files
-        app.css         --> default stylesheet
-      img/              --> image files
-      index.html        --> app layout file (the main html template file of the app)
-      js/               --> javascript files
-        controllers.js  --> application controllers
-        filters.js      --> custom angular filters
-        services.js     --> custom angular services
-        widgets.js      --> custom angular widgets
-      lib/              --> angular and 3rd party javascript libraries
-        angular/
-          angular.js            --> the latest angular js
-          angular.min.js        --> the latest minified angular js
-          angular-*.js  --> angular add-on modules
-          version.txt           --> version number
-      partials/         --> angular view partials (partial html templates)
-        partial1.html
-        partial2.html
-
-    config/testacular.conf.js        --> config file for running unit tests with Testacular
-    config/testacular-e2e.conf.js    --> config file for running e2e tests with Testacular
-
-    scripts/            --> handy shell/js/ruby scripts
-      e2e-test.sh       --> runs end-to-end tests with Testacular (*nix)
-      e2e-test.bat      --> runs end-to-end tests with Testacular (windows)
-      test.bat          --> autotests unit tests with Testacular (windows)
-      test.sh           --> autotests unit tests with Testacular (*nix)
-      web-server.js     --> simple development webserver based on node.js
-
-    test/               --> test source files and libraries
-      e2e/              -->
-        runner.html     --> end-to-end test runner (open in your browser to run)
-        scenarios.js    --> end-to-end specs
-      lib/
-        angular/                --> angular testing libraries
-          angular-mocks.js      --> mocks that replace certain angular services in tests
-          angular-scenario.js   --> angular's scenario (end-to-end) test runner library
-          version.txt           --> version file
-      unit/                     --> unit level specs/tests
-        controllersSpec.js      --> specs for controllers
-
-## Contact
-
-For more information on AngularJS please check out http://angularjs.org/
+This will do the same as the javascript build above, but it will also listen for changes in your coffeescript
+files, compile them to javascript, and push that javascript to your target.

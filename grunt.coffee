@@ -70,7 +70,13 @@ module.exports = (grunt)->
 	###############################################################
 	# Alias tasks
 	###############################################################
+
+	# Supports both javascript and coffeescript
 	grunt.registerTask('build_js', 'copy')
 	grunt.registerTask('build_coffee', 'copy:main coffee:main')
-	#grunt.registerTask('default', 'clean build_js server watch')
-	grunt.registerTask('default', 'clean build_coffee server watch')
+
+	# Uncomment only one
+	#grunt.registerTask('build', 'build_js')
+	grunt.registerTask('build', 'build_coffee')
+
+	grunt.registerTask('default', 'clean build server watch')

@@ -1,4 +1,6 @@
-
+/* NOTE this file was automatically generated from the grunt.coffee file.
+   if you run grunt coffee:jsGruntConfig, you'll regenerate it!
+*/
 module.exports = function(grunt) {
   /* Constants
   */

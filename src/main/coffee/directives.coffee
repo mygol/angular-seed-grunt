@@ -1,6 +1,5 @@
 # Directives 
 
-
 angular
   .module('myApp.directives', [])
   .directive('appVersion', ['version', (version)->

@@ -1,0 +1,1 @@
+There's a bug in the copy task that will flatten a directory if has no concrete files.  This file ensures that the files are copied correctly.
