@@ -23,8 +23,6 @@ module.exports = (grunt)->
    TEST_CONFIG = "target/test/js/config/testacular.conf.js"
    TEST_E2E_CONFIG = "target/test/js/config/testacular-e2e.conf.js"
 
-   process.env.CHROME_BIN = 'C:/Roy/Programs/GoogleChromePortable/GoogleChromePortable.exe'
-
    ###############################################################
    # Config
    ###############################################################
@@ -131,10 +129,10 @@ module.exports = (grunt)->
 
    # Supports both javascript and coffeescript
    grunt.registerTask('build_js', 'copy')
-   grunt.registerTask('build_coffee', 'copy:main coffee:main')
+   grunt.registerTask('build_coffee', 'copy:main coffee:main coffee:test')
 
    # Uncomment only one
-   grunt.registerTask('build', 'build_js')
-   #grunt.registerTask('build', 'build_coffee')
+   #grunt.registerTask('build', 'build_js')
+   grunt.registerTask('build', 'build_coffee')
 
    grunt.registerTask('default', 'clean build server watch')
