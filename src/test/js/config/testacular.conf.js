@@ -1,13 +1,14 @@
-basePath = '../';
+/* Target dir */
+basePath = '../../../';
 
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'app/lib/angular/angular.js',
-  'app/lib/angular/angular-*.js',
+  'main/lib/angular/angular.js',
+  'main/lib/angular/angular-*.js',
   'test/lib/angular/angular-mocks.js',
-  'app/js/**/*.js',
-  'test/unit/**/*.js'
+  'main/js/**/*.js',
+  'test/js/unit/**/*.js'
 ];
 
 autoWatch = true;
