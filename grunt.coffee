@@ -16,7 +16,8 @@ module.exports = (grunt)->
    # Test src dirs
    TEST_ROOT= 'src/test'
 
-   TEST_COFFEE= "#{TEST_ROOT}/coffee/**"
+   TEST_COFFEE_DIR= "#{TEST_ROOT}/coffee"
+   TEST_COFFEE= "#{TEST_COFFEE_DIR}/**"
    TEST_LIB = "#{TEST_ROOT}/lib/**"
    TEST_JS = "#{TEST_ROOT}/js/**"
 
@@ -54,6 +55,8 @@ module.exports = (grunt)->
 
          test:
             options:
+               preserve_dirs: true
+               base_path:TEST_COFFEE_DIR
                bare: true
             src: TEST_COFFEE
             dest: 'target/test/js/'
