@@ -10,6 +10,16 @@ angular-seed is a good starting place for an angularJS app but without being wra
 it becomes difficult to see how it will grow, how you will put it inside your CI servers, how you
 can add 'compile' steps such as minification, 'less' compilation, coffeescript compilation, etc.
 
+### What about Yeoman?
+
+Per [their blog](http://blog.angularjs.org/2012/09/yeoman-and-angularjs.html), Angular plans on deprecating 
+angular-seed some day in favor of a [Yeoman](http://yeoman.io/) generator.  So why this project?
+
+* Yeoman does not support Windows, and in a corporate env, many developers are still coding on Windows (inc me)
+* Yeoman has a large footprint that is not desirable in a corporate env.  (10 - 15 mins to install per their video).  No way I can convince my tech arch guys that I need ruby on 50 developer machines when we're not coding ruby.
+
+The shorter answer is - grunt is light and easy.
+
 ## Status
 
 This is still under heavy construction and is in a 'request for comments' state.  Please take part in discussions

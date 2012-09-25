@@ -10,6 +10,7 @@ describe 'directives', ()->
 
       module ($provide) ->
         $provide.value('version', 'TEST_VER');
+        return
 
       inject ($compile, $rootScope) ->
         element = $compile('<span app-version></span>')($rootScope)

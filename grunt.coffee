@@ -57,11 +57,14 @@ module.exports = (grunt)->
                "target/test/js/": TEST_JS 
          # note no copy coffee - coffeescript files are 'copied' by the compiler
 
+      # Will overwrite any javascript with the same name, if it exists
       coffee:
          main:
             options:
+               preserve_dirs: true
+               base_path: SRC_COFFEE_DIR
                bare: true
-            src: SRC_COFFEE_DIR
+            src: SRC_COFFEE
             dest: 'target/main/js/'
 
          test:
@@ -73,11 +76,13 @@ module.exports = (grunt)->
             dest: 'target/test/js/'
 
          # If you don't want to use the coffeescript grunt file.
+         ###
          jsGruntConfig:
             options:
                bare: true
             files:
                'grunt.js': 'grunt.coffee' 
+         ###
 
       server:
          base: 'target/main'
@@ -112,31 +117,10 @@ module.exports = (grunt)->
    # Custom Tasks
    ###############################################################
 
-   # Stolen from https://github.com/pkozlowski-opensource/travis-play
-   # commit 52fa175a57.  TODO move this to its own task project
-
    grunt.registerTask('testServer', 'Start Testacular server', (forWatch)->
 
-      ###
-      grunt.log.ok(forWatch)
-      console.log(this)
-      ###
-
       testacular = require('testacular');
-
-      startTestacularServer = ()-> 
-         testacular.server.start(configFile: TEST_CONFIG)
-
-      if (forWatch)
-         # start async
-         done = this.async()
-         setTimeout(()->
-            startTestacularServer()
-            done()
-         , 100)
-
-      else
-         startTestacularServer()
+      testacular.server.start(configFile: TEST_CONFIG) # starts async
    )
 
    grunt.registerTask('test', 'Run testacular tests', () ->
@@ -173,10 +157,10 @@ module.exports = (grunt)->
 
    # Supports both javascript and coffeescript
    grunt.registerTask('build_js', 'copy')
-   grunt.registerTask('build_coffee', 'copy:main coffee:main coffee:test')
+   grunt.registerTask('build_coffee', 'copy coffee')
 
    # Uncomment only one
-   grunt.registerTask('build', 'build_js')
-   #grunt.registerTask('build', 'build_coffee')
+   #grunt.registerTask('build', 'build_js')
+   grunt.registerTask('build', 'build_coffee')
 
    grunt.registerTask('default', 'clean build server testServer watch')
