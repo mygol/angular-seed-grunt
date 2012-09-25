@@ -84,6 +84,28 @@ module.exports = (grunt)->
                'grunt.js': 'grunt.coffee' 
          ###
 
+      # copied jqueryui's config, + browser
+      jshint:
+         options:
+            curly: true
+            eqnull: true
+            eqeqeq: true
+            expr: true
+            latedef: true
+            noarg: true
+            onevar: true
+            smarttabs: true
+            trailing: true
+            undef: true
+            browser:true
+
+         globals:
+            angular: true
+
+      lint:
+         main: SRC_JS
+         test: TEST_JS
+
       server:
          base: 'target/main'
 
@@ -112,6 +134,14 @@ module.exports = (grunt)->
          test:
             files: [SRC_JS, TEST_JS, SRC_COFFEE, TEST_COFFEE]
             tasks: 'test'
+
+         ###
+         # Disabled as angular-seed fails linting
+         lint:
+            files: [SRC_JS, TEST_JS]
+            tasks: 'lint'
+         ###
+
 
    ##############################################################
    # Custom Tasks
@@ -158,7 +188,8 @@ module.exports = (grunt)->
    # Alias tasks
    ###############################################################
 
-   # Supports both javascript and coffeescript
+   # commenting out lint - angular-seed fails :(
+   # grunt.registerTask('build_js', 'lint copy') 
    grunt.registerTask('build_js', 'copy')
    grunt.registerTask('build_coffee', 'copy coffee')
 
