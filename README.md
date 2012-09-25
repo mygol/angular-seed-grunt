@@ -31,6 +31,7 @@ The shorter answer is - grunt is light and easy.  Hopefully someday our paths wi
 * Create a 'dist' target that demonstrates how grunt can minifiy, concat, uglify, etc. your code to make it
 production-ready
 * Make it CI friendly
+* Create a grunt init template
 
 ## How to use angular-seed-grunt
 
