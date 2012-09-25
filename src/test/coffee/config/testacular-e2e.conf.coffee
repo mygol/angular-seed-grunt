@@ -20,3 +20,4 @@ junitReporter = {
   outputFile: 'test_out/e2e.xml',
   suite: 'e2e'
 }
+

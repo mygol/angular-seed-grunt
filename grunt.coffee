@@ -43,7 +43,7 @@ module.exports = (grunt)->
                "target/test/lib/": TEST_LIB # note this isn't watched
          js:
             files:
-               "target/main/js/": SRC_JS # note this isn't watched
+               "target/main/js/": SRC_JS
                "target/test/js/": TEST_JS 
 
       coffee:
@@ -71,6 +71,9 @@ module.exports = (grunt)->
       server:
          base: 'target/main'
 
+      testServer:
+         forWatch: true
+
       watch:
          coffee_main:
             files: SRC_COFFEE
@@ -81,8 +84,12 @@ module.exports = (grunt)->
             tasks: 'coffee:test'
 
          copy:
-            files: [SRC_HTML, SRC_CSS]
+            files: [SRC_HTML, SRC_CSS, SRC_JS]
             tasks: 'copy'
+
+         test:
+            files: [SRC_COFFEE, SRC_JS]
+            tasks: 'test'
 
    ##############################################################
    # Custom Tasks
@@ -91,10 +98,28 @@ module.exports = (grunt)->
    # Stolen from https://github.com/pkozlowski-opensource/travis-play
    # commit 52fa175a57
 
-   grunt.registerTask('testServer', 'Start Testacular server', ()->
+   grunt.registerTask('testServer', 'Start Testacular server', (forWatch)->
+
+      ###
+      grunt.log.ok(forWatch)
+      console.log(this)
+      ###
+
       testacular = require('testacular');
-      done = this.async()
-      testacular.server.start(configFile: TEST_CONFIG)
+
+      startTestacularServer = ()-> 
+         testacular.server.start(configFile: TEST_CONFIG)
+
+      if (forWatch)
+         # start async
+         done = this.async()
+         setTimeout(()->
+            startTestacularServer()
+            done()
+         , 100)
+
+      else
+         startTestacularServer()
    )
 
    grunt.registerTask('test', 'Run testacular tests', () ->
@@ -135,7 +160,7 @@ module.exports = (grunt)->
    grunt.registerTask('build_coffee', 'copy:main coffee:main coffee:test')
 
    # Uncomment only one
-   #grunt.registerTask('build', 'build_js')
-   grunt.registerTask('build', 'build_coffee')
+   grunt.registerTask('build', 'build_js')
+   #grunt.registerTask('build', 'build_coffee')
 
-   grunt.registerTask('default', 'clean build server watch')
+   grunt.registerTask('default', 'clean build server testServer:false watch')

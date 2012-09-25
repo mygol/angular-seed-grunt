@@ -11,7 +11,7 @@ files = [
   'test/js/unit/**/*.js'
 ]
 
-autoWatch = true
+autoWatch = false
 
 browsers = ['Chrome']
 
