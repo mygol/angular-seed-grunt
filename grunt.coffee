@@ -108,7 +108,7 @@ module.exports = (grunt)->
             files: [SRC_JS, TEST_JS]
             tasks: 'copy:js'
 
-         # test anytime src changes.  Runs after copy!
+         # test anytime src changes.  Runs after copy / compile!
          test:
             files: [SRC_JS, TEST_JS, SRC_COFFEE, TEST_COFFEE]
             tasks: 'test'
@@ -117,17 +117,20 @@ module.exports = (grunt)->
    # Custom Tasks
    ###############################################################
 
-   grunt.registerTask('testServer', 'Start Testacular server', (forWatch)->
+   grunt.registerTask('testServer', 'Start Testacular server', ()->
 
       testacular = require('testacular');
       testacular.server.start(configFile: TEST_CONFIG) # starts async
    )
 
    grunt.registerTask('test', 'Run testacular tests', () ->
+      # TODO See why we can't get testacular.runner.run working
+      if process.platform == 'win32'
+         testCmd = 'node_modules\\.bin\\testacular.cmd'
+      else 
+         testCmd = 'node_modules/.bin/testacular'
 
       travisArgs = ['start', '--single-run', '--no-auto-watch', '--reporter=dots', '--browsers=Firefox'] 
-
-      testCmd = if process.platform == 'win32' then 'testacular.cmd' else 'testacular'
       testArgs = if process.env.TRAVIS then travisArgs else ['run']
 
       specDone = this.async()
@@ -160,7 +163,7 @@ module.exports = (grunt)->
    grunt.registerTask('build_coffee', 'copy coffee')
 
    # Uncomment only one
-   #grunt.registerTask('build', 'build_js')
-   grunt.registerTask('build', 'build_coffee')
+   grunt.registerTask('build', 'build_js')
+   #grunt.registerTask('build', 'build_coffee')
 
    grunt.registerTask('default', 'clean build server testServer watch')

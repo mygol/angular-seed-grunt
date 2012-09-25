@@ -15,39 +15,30 @@ can add 'compile' steps such as minification, 'less' compilation, coffeescript c
 Per [their blog](http://blog.angularjs.org/2012/09/yeoman-and-angularjs.html), Angular plans on deprecating 
 angular-seed some day in favor of a [Yeoman](http://yeoman.io/) generator.  So why this project?
 
-* Yeoman does not support Windows, and in a corporate env, many developers are still coding on Windows (inc me)
-* Yeoman has a large footprint that is not desirable in a corporate env.  (10 - 15 mins to install per their video).  No way I can convince my tech arch guys that I need ruby on 50 developer machines when we're not coding ruby.
+* Yeoman does not support Windows, and in a corporate env, many developers are still coding on Windows (including me)
+* Yeoman has a large footprint (10 - 15 min unattended install per their video).  No way I can convince my SA's that I need ruby (and whatever else) on 50 developer machines when we're not coding ruby.
 
-The shorter answer is - grunt is light and easy.
+The shorter answer is - grunt is light and easy.  Hopefully someday our paths will merge.
 
-## Status
+## What does it do that angular-seed doesn't?
 
-This is still under heavy construction and is in a 'request for comments' state.  Please take part in discussions
-[here](https://groups.google.com/forum/?fromgroups#!forum/angular).
+* Provides a watch loop for both javascript and coffeescript that will compile, delint, and test your code as you save.  Tests are run with testacular.
 
-### Outstanding Items
+### What's still to do?
 
-* Tests are not part of the build.  First phase is to integrate the test scripts into grunt, future phases
-will be to use a possible testacular grunt plugin.
-* Lint the javascript.
+* End-to-end tests
+* Add a [less](http://lesscss.org/) sample
 * Create a 'dist' target that demonstrates how grunt can minifiy, concat, uglify, etc. your code to make it
-production-ready.
-
-## Coffeescript support
-
-angular-seed-grunt supports both javascript *and* coffeescript, dependening on which build you run.
-Grunt will compile your coffeescript on the fly and will push only javascript to your browser as
-you work.
-
-You can delete any sections of the build that don't apply to you.  But try coffeescript.  It's fun ;)
+production-ready
+* Make it CI friendly
 
 ## How to use angular-seed-grunt
 
-First ensure that you have a working copy of [grunt](http://gruntjs.com) and [npm](https://npmjs.org/)
-in your path.
+### Initial setup
 
-After cloning the repository, run the `scripts/init-repo` script to ensure that grunt has all of the
-dependencies that it needs for the build.
+1. Ensure that you have [node](http://nodejs.org/), [npm](https://npmjs.org/), and [grunt](http://gruntjs.com/) installed and in your path
+1. Clone this repository
+1. Run `npm install` to pull down all dependencies
 
 ### Javascript build
 
@@ -56,7 +47,10 @@ By default the build will run in 'javascript' mode and will ignore the coffeescr
 * Clean the `target` directories, which is where all build artifacts go.
 * Copy all html, js, css, etc to the target.
 * Start a web server on port 8000.
-* Start a watch that will update the target whenever your source files change.
+* Start a Testacular server on port 9876.
+* Start a watch that will copy, lint, and test every change you make.
+
+To ensure that your tests run, make sure a browser window is open to `localhost:9876`
 
 ### Coffeescript build
 
@@ -66,4 +60,6 @@ to `build_coffee`.  Then run:
 `grunt --config grunt.coffee` 
 
 This will do the same as the javascript build above, but it will also listen for changes in your coffeescript
-files, compile them to javascript, and push that javascript to your target.
+files, compile them to javascript, and push that javascript to your target.  Any javascript with the same name will be overwritten.
+
+Enjoy!
