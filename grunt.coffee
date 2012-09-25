@@ -7,18 +7,22 @@ module.exports = (grunt)->
    # Main src dirs
    SRC_ROOT= 'src/main'
 
-   SRC_COFFEE= "#{SRC_ROOT}/coffee/**"
    SRC_HTML = "#{SRC_ROOT}/html/**"
    SRC_CSS = "#{SRC_ROOT}/css/**"
    SRC_LIB = "#{SRC_ROOT}/lib/**"
+
+   SRC_COFFEE_DIR= "#{SRC_ROOT}/coffee"
+   SRC_COFFEE= "#{SRC_COFFEE_DIR}/**"
    SRC_JS = "#{SRC_ROOT}/js/**"
 
    # Test src dirs
    TEST_ROOT= 'src/test'
 
+   TEST_HTML = "#{SRC_ROOT}/html/**"
+   TEST_LIB = "#{TEST_ROOT}/lib/**"
+
    TEST_COFFEE_DIR= "#{TEST_ROOT}/coffee"
    TEST_COFFEE= "#{TEST_COFFEE_DIR}/**"
-   TEST_LIB = "#{TEST_ROOT}/lib/**"
    TEST_JS = "#{TEST_ROOT}/js/**"
 
    TEST_CONFIG = "target/test/js/config/testacular.conf.js"
@@ -35,22 +39,29 @@ module.exports = (grunt)->
          test: 'target/test'
 
       copy:
-         main:
+         # handles html, css, and imgs, which (right now) don't go through any processing
+         static:
             files:
                "target/main/": SRC_HTML
+               "target/test/": TEST_HTML
                "target/main/css/": SRC_CSS
-               "target/main/lib/": SRC_LIB # note this isn't watched
-               "target/test/lib/": TEST_LIB # note this isn't watched
+         # handles libs
+         libs:
+            files:
+               "target/main/lib/": SRC_LIB
+               "target/test/lib/": TEST_LIB
+         # all js
          js:
             files:
                "target/main/js/": SRC_JS
                "target/test/js/": TEST_JS 
+         # note no copy coffee - coffeescript files are 'copied' by the compiler
 
       coffee:
          main:
             options:
                bare: true
-            src: SRC_COFFEE
+            src: SRC_COFFEE_DIR
             dest: 'target/main/js/'
 
          test:
@@ -71,9 +82,6 @@ module.exports = (grunt)->
       server:
          base: 'target/main'
 
-      testServer:
-         forWatch: true
-
       watch:
          coffee_main:
             files: SRC_COFFEE
@@ -83,12 +91,21 @@ module.exports = (grunt)->
             files: TEST_COFFEE
             tasks: 'coffee:test'
 
-         copy:
-            files: [SRC_HTML, SRC_CSS, SRC_JS]
-            tasks: 'copy'
+         copy_static:
+            files: [SRC_HTML, TEST_HTML, SRC_CSS]
+            tasks: 'copy:static'
 
+         copy_lib:
+            files: [SRC_LIB, TEST_LIB]
+            tasks: 'copy:lib'
+
+         copy_js:
+            files: [SRC_JS, TEST_JS]
+            tasks: 'copy:js'
+
+         # test anytime src changes.  Runs after copy!
          test:
-            files: [SRC_COFFEE, SRC_JS]
+            files: [SRC_JS, TEST_JS, SRC_COFFEE, TEST_COFFEE]
             tasks: 'test'
 
    ##############################################################
@@ -96,7 +113,7 @@ module.exports = (grunt)->
    ###############################################################
 
    # Stolen from https://github.com/pkozlowski-opensource/travis-play
-   # commit 52fa175a57
+   # commit 52fa175a57.  TODO move this to its own task project
 
    grunt.registerTask('testServer', 'Start Testacular server', (forWatch)->
 
@@ -134,9 +151,8 @@ module.exports = (grunt)->
       child = grunt.utils.spawn(
          {cmd: testCmd, args: testArgs}, (err, result, code) ->
             if code
-               grunt.fail.fatal("Test failed...", code) 
-            else
-               specDone()
+               grunt.log.error("Test failed...", code) 
+            specDone()
       )
 
       child.stdout.pipe(process.stdout)
@@ -163,4 +179,4 @@ module.exports = (grunt)->
    grunt.registerTask('build', 'build_js')
    #grunt.registerTask('build', 'build_coffee')
 
-   grunt.registerTask('default', 'clean build server testServer:false watch')
+   grunt.registerTask('default', 'clean build server testServer watch')
